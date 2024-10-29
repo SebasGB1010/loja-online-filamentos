@@ -4,11 +4,12 @@ const mysql = require('mysql2');
 const app = express();
 const port = 3001;
 
+// Conexión a MySQL
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'password',
-  database: 'loja_online_filamentos'
+  password: 'milanesaconpapas1010',
+  database: 'filamento_db'
 });
 
 db.connect(err => {
@@ -16,8 +17,12 @@ db.connect(err => {
   console.log('Connected to MySQL');
 });
 
-app.use(express.json());
+// Ruta para la raíz
+app.get('/', (req, res) => {
+    res.send('Bienvenido a la API de la tienda online de filamentos');
+  });
 
+// Ruta para obtener todos los productos
 app.get('/api/products', (req, res) => {
   db.query('SELECT * FROM products', (err, results) => {
     if (err) throw err;
@@ -26,5 +31,5 @@ app.get('/api/products', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+    console.log(`Server running at http://localhost:${port}`);
+  });
