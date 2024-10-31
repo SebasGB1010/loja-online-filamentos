@@ -1,8 +1,13 @@
 // backend/index.js
 const express = require('express');
 const mysql = require('mysql2');
+const cors = require('cors'); // Importar CORS
 const app = express();
 const port = 3001;
+
+// Middleware para parsear JSON
+app.use(express.json());
+app.use(cors()); // Usar CORS
 
 // Conexión a MySQL
 const db = mysql.createConnection({
@@ -17,19 +22,22 @@ db.connect(err => {
   console.log('Connected to MySQL');
 });
 
+// Importar rutas
+const productRoutes = require('./routes/productRoutes');
+const userRoutes = require('./routes/userRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+
+app.use('/api/products', productRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/cart', cartRoutes);
+
 // Ruta para la raíz
 app.get('/', (req, res) => {
-    res.send('Bienvenido a la API de la tienda online de filamentos');
-  });
-
-// Ruta para obtener todos los productos
-app.get('/api/products', (req, res) => {
-  db.query('SELECT * FROM products', (err, results) => {
-    if (err) throw err;
-    res.json(results);
-  });
+  res.send('Bienvenido a la API de la tienda online de filamentos');
 });
 
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-  });
+  console.log(`Server running at http://localhost:${port}`);
+});
